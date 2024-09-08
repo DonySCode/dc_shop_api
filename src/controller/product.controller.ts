@@ -20,11 +20,17 @@ const getProducts = async (req: Request, res: Response) => {
 
 const getProduct = async (req: Request, res: Response) => {
     db.executeQuery(`SELECT * FROM products WHERE id = ${req.params.uid}`)
-        .then((response: Product) => {
-            res.status(200).send({
-                message: 'OK',
-                result: response
-            });
+        .then((response: Product[]) => {
+            if (response.length){
+                res.status(200).send({
+                    message: 'OK',
+                    result: response
+                });
+            } else{
+                res.status(404).send({
+                    message: 'The product you are trying to fetch does not exists.'
+                });
+            }
         }).catch(error => {
         console.log(error)
         res.status(500).send({
